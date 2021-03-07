@@ -59,7 +59,10 @@ function loadImg(src) {
 - 同步代码，一行一行放在Call Stack中执行
 - 遇到异步，会先“记录”下，等待实际（定时、网络请求等）
 - 时机到了，就移动到Callback Queue中
-- 如Call Stack为空（即同步代码执行完）Event Loop开始工作
+- 如Call Stack为空（即同步代码执行完），
+- 执行当前的微任务
+- 尝试DOM渲染
+- 然后Event Loop开始工作
 - 轮询查找Callback Queue，如有则移动到Call Stack执行
 - 然后继续轮询查询（永动机一样）
 
@@ -69,3 +72,68 @@ function loadImg(src) {
 - 异步(setTimeout, ajax等)使用回调，基于event loop
 - DOM事件也使用回调，基于event loop
 - 它们的触发时机不一样，这里要注意DOM事件不是异步
+
+### async/await和Promise的异同
+
+- 都解决了callback hell的问题
+- Promise then catch链式调用，但也是基于回调
+- async/await是同步语法，彻底消灭回调函数
+
+### async/await和Promise的关系
+
+- 执行async函数，返回的是Promise对象
+- await相当于Promise的then
+- try...catch可捕获异常，代替了Promise的catch
+
+### for...of的应用场景
+
+可以用在异步场景，与foreach和for...in...不同，需要等待结束才执行下一个
+
+```js
+// 定时算乘法
+function multi(num) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(num * num)
+        }, 1000)
+    })
+}
+
+// // 使用 forEach ，是 1s 之后打印出所有结果，即 3 个值是一起被计算出来的
+// function test1 () {
+//     const nums = [1, 2, 3];
+//     nums.forEach(async x => {
+//         const res = await multi(x);
+//         console.log(res);
+//     })
+// }
+// test1();
+
+// 使用 for...of ，可以让计算挨个串行执行
+async function test2 () {
+    const nums = [1, 2, 3];
+    for (let x of nums) {
+        // 在 for...of 循环体的内部，遇到 await 会挨个串行计算
+        const res = await multi(x)
+        console.log(res)
+    }
+}
+test2()
+```
+
+### 什么是宏任务macroTask什么是微任务microTask
+
+- 宏任务：setTimeout, setInterval, Ajax, DOM事件
+- 微任务：Promise, async/await
+- 微任务要比宏任务执行时机早
+
+### event loop和DOM渲染
+
+- 每次Call stack清空（即每次轮询结束），即同步任务执行完
+- 都是DOM重新渲染的机会，DOM结构如有改变则重新渲染
+- 然后再去触发下一次的Event Loop
+
+### 宏任务和微任务的区别
+
+- 宏任务：DOM渲染后触发，如setTimeout
+- 微任务：DOM渲染前触发，如Promise
