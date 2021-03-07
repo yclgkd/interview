@@ -198,3 +198,128 @@ BFC的常见应用：
     *zoom: 1;
 }
 ```
+
+## flex画色子
+
+### 常用语法回顾
+
+- flex-direction
+- justify-content
+- align-items
+- flex-wrap
+- align-self（对于子元素）
+
+### 具体实现
+
+[在线演示地址](https://codepen.io/yclgkd/pen/qBqMLae)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>flex 画骰子</title>
+    <style type="text/css">
+        .box {
+            width: 200px;
+            height: 200px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+
+            display: flex;
+            justify-content: space-between;
+        }
+        .item {
+            display: block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #666;
+        }
+        .item:nth-child(2) {
+            align-self: center;
+        }
+        .item:nth-child(3) {
+            align-self: flex-end;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="box">
+        <span class="item"></span>
+        <span class="item"></span>
+        <span class="item"></span>
+    </div>
+</body>
+</html>
+```
+
+## absolute和relative分别依据什么来定位？
+
+- relative依据自身定位
+- absolute依据最近一层定位元素（absolute、relative、fixed）进行定位，如果都没找到的话就依据body定位
+
+## 居中对齐有哪些实现方式
+
+### 水平居中
+
+- inline元素：text-align: center
+- block元素: margin: auto;
+- absolute元素：left: 50% + margin-left负值（自身宽度的一半），需要知道子元素的宽
+- absolute元素：left: 50% + transform: translate(-50%, 0);
+
+### 垂直居中
+
+- inline元素：line-height的值等于height
+- absolute元素：top: 50% + margin-top负值（自身高度的一半），需要知道子元素的高
+- absolute元素：top: 50% + transform: translate(0, -50%);
+- absolute元素：top,left,bottom,right都设置成0 + margin: auto
+
+## line-height的继承问题
+
+- 父元素写具体的值，如30px，则继承该值
+- 父元素写比例，如2/1.5，则继承改比例
+- 父元素写百分比，如200%，则继承计算出来的值
+
+## rem是什么？
+
+- px，绝对长度单位，最常用
+- em，相对长度单位，相对于父元素
+- rem，相对长度单位，相对于根元素，常用于响应式布局（这里的r是root的意思）
+
+### 如何使用
+
+```css
+html {
+    font-size: 100px;
+}
+```
+
+对html设置font-size，之后1rem = 100px，0.1rem = 10px
+
+### rem的弊端
+
+- 具有阶梯型，媒体查询跨度比较大
+
+## 网页视口尺寸
+
+- window.screen.height // 屏幕高度
+- window.innerHeight // 网页视口高度
+- document.body.clientHeight // body高度
+
+## vw/vh、vmax/vmin
+
+- vh：网页视口高度1/100
+- vw：网页视口宽的1/100
+- vmax：取两者最大值
+- vmin：取两者最小值
+
+## 响应式布局的常见方案
+
+- media-query，根据不同的屏幕宽度设置根元素font-size
+- rem，基于根元素的相对长度单位进行计算
+- vw/vh
