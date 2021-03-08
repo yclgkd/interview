@@ -1,5 +1,52 @@
 # JavaScript面试题
 
+## 变量类型和计算
+
+### typeof能判断哪些类型
+
+- 所有的值类型：number string undefined boolean Symbol
+- 函数和Object（null, object, array）
+
+### 何时使用 == 何时使用 ===  
+
+- null和undefined的时候用==，x == null
+- 其他情况用 ===  
+
+### 手写深拷贝
+
+```js
+function deepClone(obj = {}) {
+    if (typeof obj !== 'object' || obj == null) {
+        // obj 是 null ，或者不是对象和数组，直接返回
+        return obj
+    }
+
+    // 初始化返回结果
+    let result
+    if (obj instanceof Array) {
+        result = []
+    } else {
+        result = {}
+    }
+
+    for (let key in obj) {
+        // 保证 key 不是原型的属性
+        if (obj.hasOwnProperty(key)) {
+            // 递归调用！！！
+            result[key] = deepClone(obj[key])
+        }
+    }
+
+    // 返回结果
+    return result
+}
+```
+
+### JS数据类型有哪些
+
+JavaScript 的类型分为两种：原始数据类型（Primitive data types）和对象类型（Object types）。
+原始数据类型包括：布尔值、数值、字符串、null、undefined 以及 ES6 中的新类型 Symbol 和 ES10 中的新类型BigInt。所以一共是八种。
+
 ## 异步
 
 ### 同步和异步有何不同
@@ -47,6 +94,7 @@ function loadImg(src) {
                 const error = new Error(`图片加载失败，图片地址：${src}`) 
                 reject(error)
             }
+            // 一赋值就会触发图片的加载，加载成功执行resolve函数，加载失败执行reject函数
             img.src = src
         }
     )
@@ -137,3 +185,28 @@ test2()
 
 - 宏任务：DOM渲染后触发，如setTimeout
 - 微任务：DOM渲染前触发，如Promise
+
+## DOM（Document Object Model）
+
+### DOM的本质
+
+DOM的本质是html解析出来的一棵树
+
+### DOM操作的常用API
+
+```js
+document.getElementById
+document.getElementsByTagName
+document.getElementsByClassName
+document.querySelector
+document.querySelectorAll
+```
+
+### attr和property的区别
+
+- property：修改对象属性，不会体现到html结构中，如dom.nodeName dom.style.width dom.style.
+- attribute：修改html属性，会改变html结构，如dom.getAttribute dom.setAttribute
+- 两者都可能引起DOM的重新渲染
+
+### 一次性插入多个DOM节点，考虑性能
+
